@@ -19,4 +19,4 @@ steps:
       - 'CLOUDSDK_CONTAINER_CLUSTER=ci-cd'
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: NONE
