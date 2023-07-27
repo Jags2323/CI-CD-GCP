@@ -5,17 +5,22 @@ steps:
 
   # Step 2: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/load-393217/demo:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/load-393217/demo:latest', '.']
 
   # Step 3: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/load-393217/demo:$COMMIT_SHA']
+    args: ['push', 'gcr.io/load-393217/demo:latest']
 
-  # Step 4: Deploy the application to Kubernetes
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set', 'image', 'deployment/demo', 'demo=gcr.io/load-393217/demo:$COMMIT_SHA']
+  # Step 4: Deploy the application to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'demo'  # Replace with your desired service name
+      - '--image=gcr.io/load-393217/demo:latest'
+      - '--region=us-east1'  # Replace with your desired region
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=ci-cd'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=ci-cd5'
 options:
   logging: CLOUD_LOGGING_ONLY
